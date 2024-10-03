@@ -5,277 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     <link rel="stylesheet" href="style.css" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5667920797558447"
-    crossorigin="anonymous"></script>
-    <title>What Bird Eats What</title>
+    <script src="Questions.js"></script>
+    <script src="QuestionGame.js"></script>
+    <title>What Birds Eat Game</title>
   </head>
   <body>
-     <h1>What Bird Eats What</h1>
+    <h1>What Birds Eat Game</h1>
 
     <div id="image-container"></div>
     <div id="name"></div>
     <div id="item-container"></div>
     <div id="result"></div>
     <script>
+      const filesURL =
+        "https://area2-documentsstore.s3.eu-west-2.amazonaws.com/";
 
-class QuestionGame {
-    constructor(data) {
-      this.data = data;
-      this.itemIndex = 0;
-      this.wins = 0;
-      this.answered = 0;
-      this.questionsLength = 6;
-      this.questionSet = [];
-      this.setQuestionSet();
-      this.imageContainer = document.getElementById("image-container");
-      this.itemContainer = document.getElementById("item-container");
-      this.result = document.getElementById("result");
-      this.name = document.getElementById("name");
-      this.stats = document.getElementById("stats");
-    }
-
-    fillStats() {
-      let message = "";
-      if (this.answered === this.wins) {
-        message = "Great you won : ) ";
-      } else if (this.wins > this.answered / 2) {
-        message = "Not bad.";
-      }
-
-      this.imageContainer.innerHTML = "";
-      const p = document.createElement("p");
-      p.innerText = `${message} You answered ${this.answered} questions and got ${this.wins} correct.`;
-
-      const b = document.createElement("button");
-      b.textContent = "Play again";
-      b.addEventListener("click", () => this.setQuestion());
-
-      this.imageContainer.appendChild(p);
-      this.imageContainer.appendChild(b);
-    }
-
-    answer() {
-      this.itemIndex++;
-      this.answered++;
-
-      if (this.itemIndex >= this.questionsLength) {
-        this.name.innerText = "";
-        this.itemContainer.innerText = "";
-        this.fillStats();
-        this.itemIndex = 0;
-        this.answered = 0;
-        this.wins = 0;
-        this.setQuestionSet();
-      } else {
-        this.imageContainer.innerText = "";
-        setTimeout(this.setQuestion(), 2000);
-      }
-    }
-
-    setQuestion() {
-      const index = this.questionSet[this.itemIndex];
-      const currentItem = this.data[index];
-      console.log("set question",currentItem,index);
-      this.result.innerHTML = "";
-      this.itemContainer.innerHTML = "";
-      this.name.innerText = currentItem.name;
-
-      this.imageContainer.innerText = "";
-      const image = document.createElement("img");
-      image.classList = "fade-in question-image";
-      image.src = currentItem.image;
-      this.imageContainer.appendChild(image);
-
-      currentItem.questions.map((value, index) => {
-        const b = document.createElement("button");
-        b.textContent = value ;
-        b.setAttribute(
-          "data-question-result",
-          index === currentItem.answer ? "correct" : "incorrect"
-        );
-
-        b.addEventListener("click", () => this.buttonClickEventHandler());
-        b.classList.add("answer-button");
-        this.itemContainer.appendChild(b);
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const game = new QuestionGame(data);
+        game.setQuestion();
       });
-    }
 
-    getRand() {
-      return Math.floor(Math.random() * this.data.length);
-    }
-
-    setQuestionSet() {
-      this.questionSet = [];
-      while (this.questionSet.length < this.questionsLength) {
-        let i = this.getRand();
-        if (!this.questionSet.includes(i)) {
-          this.questionSet.push(i);
-        }
-      }
-      console.log(this.questionSet);
-    }
-
-    buttonClickEventHandler() {
-      console.log("clicked");
-      let isCorrect =
-        event.target.getAttribute("data-question-result") === "correct";
-
-      if (isCorrect) {
-        this.wins++;
-      }
-      console.log(isCorrect, this.wins);
-      this.answer();
-    }
-  }
-
-
-const data = [
-    {
-      "image": "greater_spotted_woodpecker.jpeg",
-      "name": "Greater Spotted Woodpecker",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "bearded_tit.jpeg",
-      "name": "Bearded Tit",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "common_moorhen.jpeg",
-      "name": "Moore Hen",
-      "questions": ["Eats Bugs", "Eats Plants"],
-      "answer": 1
-    },
-    {
-      "image": "common_tern.jpeg",
-      "name": "Common Tern",
-      "questions": ["Eats Fish", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "FDFC70AC-495A-455B-82A1-031264E07240.jpeg",
-      "name": "Dunnock",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "eurasian_goosander.jpeg",
-      "name": "Eurasian Goosander",
-      "questions": ["Eats Fish", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "tufted_duck.jpeg",
-      "name": "Tufted Duck",
-      "questions": ["Eats Bugs", "Eats Plants"],
-      "answer": 1
-    },
-    {
-      "image": "E4BA9D0E-A16F-43C5-8664-125D6E9DF40A.jpeg",
-      "name": "Black Headed Gull",
-      "questions": ["Eats anything", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "common_linnet_female.jpeg",
-      "name": "Common Linnet (Female)",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-    {
-      "image": "eurasian_nuthatch.jpeg",
-      "name": "Eurasian Nuthatch",
-      "questions": ["Eats Bugs", "Eats Nuts"],
-      "answer": 1
-    },
-    {
-      "image": "common_redshank.jpeg",
-      "name": "Common Redshank",
-      "questions": ["Eats Worms", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "white-throated_dipper.jpeg",
-      "name": "White-throated Dipper",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "tern2.jpeg",
-      "name": "Tern",
-      "questions": ["Eats Bugs", "Eats Fish"],
-      "answer": 1
-    },
-    {
-      "image": "spottedflycatcher.JPG",
-      "name": "Spotted fly catcher",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "common_linnet_male.jpeg",
-      "name": "Common Linnet (Male)",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-    {
-      "image": "goldfinch.JPG",
-      "name": "Gold Finch (Male)",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-    {
-      "image": "bullfinch.JPG",
-      "name": "Bull finch",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-    {
-      "image": "stonechatmale.JPG",
-      "name": "Stone Chat (Male)",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "stonechatfemale.JPG",
-      "name": "Stone Chat (Female)",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "greenfinch.JPG",
-      "name": "Green Finch",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-    {
-      "image": "longtailedtit.JPG",
-      "name": "Long Tailed Tit",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 0
-    },
-    {
-      "image": "sparrow.JPG",
-      "name": "Sparrow",
-      "questions": ["Eats Bugs", "Eats Seeds"],
-      "answer": 1
-    },
-  ];
-
-  document.addEventListener("DOMContentLoaded",
-     (event) => {
-
-    const game = new QuestionGame(data);
-                game.setQuestion();
-     
-    
-    
-    });
-
-
-
+      data.forEach((item) => {
+        const img = new Image();
+        img.src = filesURL + item.image;
+      });
     </script>
   </body>
 </html>
