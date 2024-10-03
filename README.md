@@ -2,6 +2,8 @@
 
 A game guessing what different types of birds eat
 
-A very simple minimalist game in javascript using one file.
+A very simple minimalist game in javascript.
 
-the styling comes from simple css.
+The styling comes from simple css.
+
+All the photos are my own original bird shots. 
